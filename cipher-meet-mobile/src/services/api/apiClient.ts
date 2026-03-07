@@ -1,19 +1,20 @@
 import axios from 'axios';
-import { MMKV } from 'react-native-mmkv';
+import { storage, StorageKeys } from '../../utils/storage';
+import { API_V1 } from '../../config/env';
 
 // ─── Storage ─────────────────────────────────────────────────────────────────
-const storage = new MMKV({ id: 'auth-tokens' });
+// Using unified storage instance
 
 // ─── Axios Instance ────────────────────────────────────────────────────────────
 export const apiClient = axios.create({
-    baseURL: 'http://10.0.2.2:3000/api/v1', // Android emulator → localhost:3000
+    baseURL: API_V1,
     timeout: 15000,
     headers: { 'Content-Type': 'application/json' },
 });
 
 // ─── Request Interceptor — attach access token ─────────────────────────────
-apiClient.interceptors.request.use((config) => {
-    const token = storage.getString('accessToken');
+apiClient.interceptors.request.use(async (config) => {
+    const token = await storage.getString(StorageKeys.ACCESS_TOKEN);
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -43,17 +44,17 @@ apiClient.interceptors.response.use(
 
             isRefreshing = true;
             try {
-                const refreshToken = storage.getString('refreshToken');
+                const refreshToken = await storage.getString(StorageKeys.REFRESH_TOKEN);
                 if (!refreshToken) throw new Error('No refresh token');
 
                 const { data } = await axios.post<{ data: { accessToken: string; refreshToken: string } }>(
-                    'http://10.0.2.2:3000/api/v1/auth/refresh',
+                    `${API_V1}/auth/refresh`,
                     { refreshToken },
                 );
 
                 const { accessToken, refreshToken: newRefreshToken } = data.data;
-                storage.set('accessToken', accessToken);
-                storage.set('refreshToken', newRefreshToken);
+                await storage.set(StorageKeys.ACCESS_TOKEN, accessToken);
+                await storage.set(StorageKeys.REFRESH_TOKEN, newRefreshToken);
 
                 refreshQueue.forEach((cb) => cb(accessToken));
                 refreshQueue = [];

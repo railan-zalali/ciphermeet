@@ -19,7 +19,6 @@ const getPasswordStrength = (pwd: string): { score: number; label: string } => {
     if (/[0-9]/.test(pwd)) score++;
     if (/[^A-Za-z0-9]/.test(pwd)) score++;
     const labels = ['Lemah', 'Sedang', 'Kuat', 'Sangat Kuat'];
-    const colors = [Colors.error, Colors.warning, Colors.secondary, Colors.success];
     return { score, label: labels[score - 1] ?? '' };
 };
 
@@ -55,8 +54,15 @@ export const RegisterScreen: React.FC = () => {
         if (!validate()) return;
         setLoading(true);
         try {
-            // TODO: call API
+            // Simulate API call delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            // In real implementation, you would call authApi.register(form) here
+            // await authApi.register(form);
+            console.log('Register success, navigating to OTP');
             navigation.navigate('OTP', { phoneNumber: form.phoneNumber });
+        } catch (error) {
+            console.error('Registration failed:', error);
+            // setErrors({ ...errors, api: 'Gagal mendaftar. Silakan coba lagi.' });
         } finally {
             setLoading(false);
         }

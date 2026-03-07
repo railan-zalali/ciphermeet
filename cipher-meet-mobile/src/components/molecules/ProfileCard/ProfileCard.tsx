@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { Colors, FontSize, FontFamily, Spacing, BorderRadius, Shadow } from '../../theme';
-import { CAvatar } from '../atoms/CAvatar/CAvatar';
-import { CChip } from '../atoms/CChip/CChip';
+import { Colors, FontSize, FontFamily, Spacing, BorderRadius, Shadow } from '../../../theme';
+import { CChip } from '../../atoms/CChip/CChip';
 
 export interface ProfileCardData {
     id: string;

@@ -12,10 +12,24 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle")
+        classpath("com.android.tools.build:gradle:8.7.3")
         classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.20")
     }
 }
 
 apply plugin: "com.facebook.react.rootproject"
+
+allprojects {
+    repositories {
+        maven {
+            url("$rootDir/../node_modules/@react-native-async-storage/async-storage/android/local_repo")
+        }
+    }
+    ext.getExtOrDefault = { name, defaultValue ->
+        return rootProject.ext.has(name) ? rootProject.ext.get(name) : defaultValue
+    }
+    ext.getExtOrIntegerDefault = { name, defaultValue ->
+        return rootProject.ext.has(name) ? rootProject.ext.get(name) : (defaultValue instanceof Integer ? defaultValue : (defaultValue ? defaultValue.toInteger() : 0))
+    }
+}

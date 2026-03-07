@@ -1,15 +1,14 @@
 import React, { useCallback } from 'react';
 import {
     View, Text, TouchableOpacity, StyleSheet, Dimensions,
-    AccessibilityInfo,
 } from 'react-native';
 import Animated, {
     useSharedValue, useAnimatedStyle, withSpring, runOnJS,
     interpolate, Extrapolation,
 } from 'react-native-reanimated';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
-import { Colors, Spacing, BorderRadius, FontSize, FontFamily, MinTouchTarget } from '../../theme';
-import { ProfileCard, ProfileCardData } from '../molecules/ProfileCard/ProfileCard';
+import { Colors, Spacing, BorderRadius, FontSize, FontFamily, MinTouchTarget } from '../../../theme';
+import { ProfileCard, ProfileCardData } from '../../molecules/ProfileCard/ProfileCard';
 
 const { width: SCREEN_W } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_W * 0.35;
@@ -23,7 +22,8 @@ interface SwipeStackProps {
     onCardPress?: (profile: ProfileCardData) => void;
 }
 
-export const SwipeStack: React.FC<SwipeStackProps> = ({
+// Memoize the component to prevent re-renders
+const SwipeStackComponent: React.FC<SwipeStackProps> = ({
     profiles, onSwipe, onCardPress,
 }) => {
     const translateX = useSharedValue(0);
@@ -173,6 +173,8 @@ export const SwipeStack: React.FC<SwipeStackProps> = ({
         </View>
     );
 };
+
+export const SwipeStack = React.memo(SwipeStackComponent);
 
 const styles = StyleSheet.create({
     container: { flex: 1, alignItems: 'center' },

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet, ViewStyle } from 'react-native';
-import { Colors, FontSize, FontFamily, BorderRadius, MinTouchTarget } from '../../theme';
+import { Colors, FontFamily } from '../../../theme';
 
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 

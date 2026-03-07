@@ -1,7 +1,8 @@
 import React from 'react';
 import {
-    View, Text, ScrollView, SafeAreaView, StatusBar, StyleSheet, TouchableOpacity, Switch,
+    View, Text, ScrollView, SafeAreaView, StatusBar, StyleSheet, TouchableOpacity,
 } from 'react-native';
+// Switch is handled internally by CSwitch component
 import { useNavigation } from '@react-navigation/native';
 import { Colors, FontSize, FontFamily, Spacing, BorderRadius, MinTouchTarget } from '../../theme';
 import { CSwitch } from '../../components/atoms/CSwitch/CSwitch';
@@ -118,9 +119,10 @@ export const AccessibilitySettingsScreen: React.FC = () => {
                                     <Text style={styles.settingDesc}>{item.desc}</Text>
                                 </View>
                                 <CSwitch
+                                    label={item.title}
                                     value={item.value}
-                                    onValueChange={item.onChange}
-                                    accessibilityLabel={item.title}
+                                    onChange={item.onChange}
+                                    description={item.desc}
                                 />
                             </View>
                         ))}

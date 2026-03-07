@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Colors, FontSize, FontFamily, Spacing, BorderRadius } from '../../theme';
+import { Colors, FontSize, FontFamily, Spacing, BorderRadius } from '../../../theme';
 
 interface MessageBubbleProps {
     content: string;

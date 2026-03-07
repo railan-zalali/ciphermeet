@@ -58,6 +58,12 @@ const AuthStack = createStackNavigator<AuthStackParams>();
 const Tab = createBottomTabNavigator<MainTabParams>();
 const RootStack = createStackNavigator<RootStackParams>();
 
+const DiscoveryIcon = ({ color }: { color: string }) => <Text style={{ color, fontSize: 20 }}>🔍</Text>;
+const ActivityIcon = ({ color }: { color: string }) => <Text style={{ color, fontSize: 20 }}>❤️</Text>;
+const ChatListIcon = ({ color }: { color: string }) => <Text style={{ color, fontSize: 20 }}>✉️</Text>;
+const PremiumIcon = ({ color }: { color: string }) => <Text style={{ color, fontSize: 20 }}>💎</Text>;
+const ProfileIcon = ({ color }: { color: string }) => <Text style={{ color, fontSize: 20 }}>👤</Text>;
+
 // ─── Tab Navigator ────────────────────────────────────────────────────────────
 function MainTabs() {
     return (
@@ -84,7 +90,7 @@ function MainTabs() {
                 component={DiscoveryScreen}
                 options={{
                     tabBarLabel: 'Cari',
-                    tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>🔍</Text>,
+                    tabBarIcon: DiscoveryIcon,
                     tabBarAccessibilityLabel: 'Cari, tab 1 dari 5',
                 }}
             />
@@ -93,7 +99,7 @@ function MainTabs() {
                 component={ActivityScreen}
                 options={{
                     tabBarLabel: 'Aktivitas',
-                    tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>❤️</Text>,
+                    tabBarIcon: ActivityIcon,
                     tabBarAccessibilityLabel: 'Aktivitas, tab 2 dari 5',
                 }}
             />
@@ -102,7 +108,7 @@ function MainTabs() {
                 component={ChatListScreen}
                 options={{
                     tabBarLabel: 'Pesan',
-                    tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>✉️</Text>,
+                    tabBarIcon: ChatListIcon,
                     tabBarAccessibilityLabel: 'Pesan, tab 3 dari 5',
                 }}
             />
@@ -111,7 +117,7 @@ function MainTabs() {
                 component={PremiumScreen}
                 options={{
                     tabBarLabel: 'Premium',
-                    tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>💎</Text>,
+                    tabBarIcon: PremiumIcon,
                     tabBarAccessibilityLabel: 'Premium, tab 4 dari 5',
                 }}
             />
@@ -120,7 +126,7 @@ function MainTabs() {
                 component={MyProfileScreen}
                 options={{
                     tabBarLabel: 'Profil',
-                    tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>👤</Text>,
+                    tabBarIcon: ProfileIcon,
                     tabBarAccessibilityLabel: 'Profil, tab 5 dari 5',
                 }}
             />

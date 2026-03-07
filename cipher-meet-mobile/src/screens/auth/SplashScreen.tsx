@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import {
     View, Text, Animated, StyleSheet, StatusBar,
-    AccessibilityInfo,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -29,7 +28,7 @@ export const SplashScreen: React.FC = () => {
         ]).start(() => {
             navigation.replace('Onboarding');
         });
-    }, []);
+    }, [logoOpacity, logoScale, navigation, taglineOpacity]);
 
     return (
         <View style={styles.container} accessible accessibilityLabel="CipherMeet — memuat aplikasi">

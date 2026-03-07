@@ -2,7 +2,7 @@ import React from 'react';
 import {
     Switch, View, Text, StyleSheet,
 } from 'react-native';
-import { Colors, FontSize, FontFamily, Spacing, MinTouchTarget } from '../../theme';
+import { Colors, FontSize, FontFamily, Spacing, MinTouchTarget } from '../../../theme';
 
 interface CSwitchProps {
     value: boolean;
@@ -10,17 +10,18 @@ interface CSwitchProps {
     label: string;
     description?: string;
     disabled?: boolean;
+    accessibilityLabel?: string;
 }
 
 export const CSwitch: React.FC<CSwitchProps> = ({
-    value, onChange, label, description, disabled = false,
+    value, onChange, label, description, disabled = false, accessibilityLabel,
 }) => {
     return (
         <View
             style={styles.row}
             accessible
             accessibilityRole="switch"
-            accessibilityLabel={label + (description ? `. ${description}` : '')}
+            accessibilityLabel={accessibilityLabel || (label + (description ? `. ${description}` : ''))}
             accessibilityState={{ checked: value, disabled }}
         >
             <View style={styles.textContainer}>

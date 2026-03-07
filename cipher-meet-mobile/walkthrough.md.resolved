@@ -1,0 +1,234 @@
+# 🚀 Panduan Menjalankan CipherMeet
+
+## Prasyarat
+
+| Tool | Versi | Link |
+|---|---|---|
+| **Node.js** | 20+ | [nodejs.org](https://nodejs.org) |
+| **Java JDK** | 17 | [adoptium.net](https://adoptium.net) |
+| **Android Studio** | Latest | Untuk Android SDK & Emulator |
+| **Docker Desktop** | Latest | [docker.com](https://docker.com) |
+
+> [!IMPORTANT]
+> Set `ANDROID_HOME` environment variable ke direktori Android SDK kamu, contoh: `C:\Users\USER\AppData\Local\Android\Sdk`
+
+---
+
+## 🗄️ Step 1 — Jalankan Database (Docker)
+
+```bash
+cd d:\Railan\apl\CipherMeet
+docker compose up -d
+```
+
+Verifikasi semua container berjalan:
+```bash
+docker compose ps
+```
+
+Harapan output:
+```
+NAME               STATUS      PORTS
+postgres           running     0.0.0.0:5432->5432/tcp
+mongodb            running     0.0.0.0:27017->27017/tcp
+redis              running     0.0.0.0:6379->6379/tcp
+```
+
+---
+
+## ⚙️ Step 2 — Setup Backend
+
+```bash
+cd d:\Railan\apl\CipherMeet\cipher-meet-backend
+
+# Install dependencies
+npm install
+
+# Salin dan konfigurasi .env
+copy .env.example .env
+```
+
+**Edit `.env`** — Isi nilai minimal ini:
+```env
+POSTGRES_HOST=localhost
+POSTGRES_USER=ciphermeet
+POSTGRES_PASSWORD=changeme_dev
+POSTGRES_DB=ciphermeet
+MONGODB_URI=mongodb://localhost:27017/ciphermeet
+REDIS_HOST=localhost
+REDIS_PORT=6379
+JWT_SECRET=my-super-secret-dev-key-change-in-prod
+JWT_EXPIRES_IN=15m
+```
+
+**Jalankan backend:**
+```bash
+npm run start:dev
+```
+
+Backend berjalan di:
+- **REST API**: `http://localhost:3000/api/v1`
+- **Swagger Docs**: `http://localhost:3000/api/docs`
+- **WebSocket**: `ws://localhost:3000/chat`
+
+---
+
+## 📱 Step 3 — Setup Mobile App
+
+```bash
+cd d:\Railan\apl\CipherMeet\cipher-meet-mobile
+
+# Install dependencies
+npm install
+```
+
+**Salin .env:**
+```bash
+copy .env.example .env
+```
+
+**Untuk Android emulator**, URL API sudah dikonfigurasi ke `10.0.2.2:3000` (Android emulator → localhost). Tidak perlu diubah untuk development.
+
+---
+
+## 🤖 Step 4 — Jalankan di Android
+
+### Opsi A: Android Emulator (Rekomendasi)
+
+1. Buka Android Studio
+2. Buka **AVD Manager** (Tools → Device Manager)
+3. Buat emulator: **Pixel 7 Pro**, API **34** (Android 14)
+4. Start emulator, tunggu sampai booting selesai
+
+Kemudian jalankan:
+```bash
+# Terminal 1 (Metro bundler)
+cd d:\Railan\apl\CipherMeet\cipher-meet-mobile
+npx react-native start
+
+# Terminal 2 (build & install ke emulator)
+npx react-native run-android
+```
+
+### Opsi B: Device Fisik
+
+1. Aktifkan **Developer Options** di HP (ketuk Build Number 7x)
+2. Aktifkan **USB Debugging**
+3. Sambungkan dengan kabel USB
+4. Verifikasi: `adb devices` (harus muncul device ID)
+
+Kemudian jalankan API client dengan IP komputer kamu:
+Edit [src/services/api/apiClient.ts](file:///d:/Railan/apl/CipherMeet/cipher-meet-mobile/src/services/api/apiClient.ts):
+```typescript
+// Ganti
+baseURL: 'http://10.0.2.2:3000/api/v1',
+// Dengan IP komputer kamu (cek dengan ipconfig)
+baseURL: 'http://192.168.1.xxx:3000/api/v1',
+```
+
+```bash
+npx react-native run-android
+```
+
+---
+
+## 🔍 Troubleshooting Umum
+
+| Error | Solusi |
+|---|---|
+| `ECONNREFUSED 5432` | Docker belum jalan → `docker compose up -d` |
+| `Metro bundler: Unable to resolve module` | `npx react-native start --reset-cache` |
+| `SDK location not found` | Set `ANDROID_HOME` di System Environment Variables |
+| `Could not find avdmanager` | Install Android SDK Command-line Tools via Android Studio |
+| `Error: Cannot find native module` (AV, Camera, dll) | Pastikan menjalankan `npx react-native run-android`, bukan Expo |
+| Backend 401 di semua endpoint | Cek `JWT_SECRET` di `.env` backend sesuai |
+| Swagger tidak muncul | Pastikan mode bukan `production`: `NODE_ENV=development` |
+
+---
+
+## 📋 Urutan Testing Flow
+
+```
+1. Buka app → Splash Screen → Onboarding
+2. Daftar akun baru (Register)
+3. Verifikasi OTP (cek terminal backend untuk OTP dev mode)
+4. Isi Profile Wizard (5 langkah)
+5. Discovery feed → swipe → match
+6. Tab Aktivitas → lihat match
+7. Buka Chat → kirim pesan
+8. Tab Profil → Privacy / Security / Aksesibilitas
+9. Tab Premium → lihat plan Gold/Platinum
+```
+
+> [!NOTE]
+> OTP untuk development ditampilkan di terminal backend:
+> ```
+> [AuthService] OTP for +628123456789: 123456 (dev mode)
+> ```
+
+---
+
+## 🧪 Menjalankan Tests
+
+**Backend:**
+```bash
+cd d:\Railan\apl\CipherMeet\cipher-meet-backend
+npm run test           # Unit tests
+npm run test:e2e       # E2E tests
+npm run test:cov       # Coverage report
+```
+
+**Mobile:**
+```bash
+cd d:\Railan\apl\CipherMeet\cipher-meet-mobile
+npm test               # Jest + RNTL
+```
+
+---
+
+## 🏗️ Build Production (Android APK)
+
+```bash
+cd d:\Railan\apl\CipherMeet\cipher-meet-mobile\android
+
+# Debug APK
+./gradlew assembleDebug
+# APK di: android/app/build/outputs/apk/debug/app-debug.apk
+
+# Release APK (perlu keystore)
+./gradlew assembleRelease
+```
+
+---
+
+## 📁 Struktur Proyek
+
+```
+CipherMeet/
+├── cipher-meet-backend/         # NestJS API
+│   ├── src/modules/
+│   │   ├── auth/                # JWT, Argon2id, OTP
+│   │   ├── users/               # Profile CRUD, geoloc
+│   │   ├── discovery/           # Swipe feed, match
+│   │   ├── chat/                # E2EE WebSocket + MongoDB
+│   │   ├── keys/                # X3DH Signal Protocol
+│   │   ├── security/            # 2FA TOTP, sessions
+│   │   ├── premium/             # Subscription tiers
+│   │   ├── notifications/       # FCM + BullMQ
+│   │   └── media/               # S3/R2 upload
+│   └── docker-compose.yml       # Postgres + MongoDB + Redis
+│
+├── cipher-meet-mobile/          # React Native (bare)
+│   ├── src/
+│   │   ├── theme/               # Colors, typography, spacing
+│   │   ├── components/          # atoms/ molecules/ organisms/
+│   │   ├── screens/             # auth/ discovery/ chat/ profile/ wizard/ premium/
+│   │   ├── navigation/          # RootNavigator
+│   │   ├── stores/              # authStore, discoveryStore, socketStore, e2eeStore
+│   │   ├── hooks/               # useDiscovery, useChat, useUsers
+│   │   ├── services/api/        # apiClient + auth/discovery/chat/users.api
+│   │   └── types/               # user.ts
+│   └── App.tsx
+│
+└── .github/workflows/ci.yml     # GitHub Actions CI
+```

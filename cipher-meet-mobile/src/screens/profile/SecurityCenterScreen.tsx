@@ -57,7 +57,7 @@ export const SecurityCenterScreen: React.FC = () => {
                         accessibilityRole="button"
                         accessibilityLabel={item.a11y}
                     >
-                        <View style={styles.menuIconContainer}><Text style={{ fontSize: 22 }}>{item.icon}</Text></View>
+                        <View style={styles.menuIconContainer}><Text style={styles.icon}>{item.icon}</Text></View>
                         <View style={styles.menuTextContainer}>
                             <Text style={styles.menuLabel}>{item.label}</Text>
                             <Text style={styles.menuDesc}>{item.desc}</Text>
@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     menuDesc: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, marginTop: 2 },
     chevron: { color: Colors.textDisabled, fontSize: FontSize.xl },
     menuIconContainer: { width: 44, height: 44, borderRadius: 12, backgroundColor: Colors.card, alignItems: 'center', justifyContent: 'center' },
+    icon: { fontSize: 22 },
     menuTextContainer: { flex: 1 },
     e2eeNote: { backgroundColor: 'rgba(124,92,252,0.08)', borderRadius: BorderRadius.sm, padding: Spacing.md, marginTop: Spacing.xl, borderWidth: 1, borderColor: Colors.border },
     e2eeNoteText: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, lineHeight: 20 },

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useRef } from 'react';
 import {
     View, Text, StyleSheet, LayoutChangeEvent, PanResponder,
 } from 'react-native';
@@ -28,10 +28,10 @@ export const CSlider: React.FC<CSliderProps> = ({
     const toX = (val: number) => ((val - min) / (max - min)) * trackWidthRef.current;
     const toVal = (x: number) => min + (x / trackWidthRef.current) * (max - min);
 
-    const onLayout = useCallback((e: LayoutChangeEvent) => {
+    const onLayout = (e: LayoutChangeEvent) => {
         trackWidthRef.current = e.nativeEvent.layout.width - 24;
         translateX.value = toX(value);
-    }, [value, min, max]);
+    };
 
     const panResponder = useRef(
         PanResponder.create({

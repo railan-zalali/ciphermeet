@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import {
-    View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar,
+    View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar, ListRenderItem
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -21,8 +21,60 @@ const MOCK_CONVERSATIONS: ConversationItem[] = [
     { id: 'c3', partnerName: 'Dewi Rahayu', lastMessageTime: 'Kemarin', unreadCount: 1, isOnline: false },
 ];
 
+const ItemSeparator = () => <View style={styles.separator} />;
+const ListEmpty = () => (
+    <View style={styles.empty}>
+        <Text style={styles.emptyText}>💬</Text>
+        <Text style={styles.emptyMsg}>Belum ada percakapan</Text>
+        <Text style={styles.emptySubMsg}>Match dengan seseorang untuk mulai chat</Text>
+    </View>
+);
+
+const ConversationListItem = memo(({ item, onPress }: { item: ConversationItem; onPress: (item: ConversationItem) => void }) => (
+    <TouchableOpacity
+        style={styles.conversationItem}
+        onPress={() => onPress(item)}
+        accessibilityRole="button"
+        accessibilityLabel={`${item.partnerName}${item.unreadCount > 0 ? `, ${item.unreadCount} pesan belum dibaca` : ''}${item.isOnline ? ', sedang online' : ''}, ${item.lastMessageTime}`}
+    >
+        <CAvatar
+            name={item.partnerName}
+            size="md"
+            isOnline={item.isOnline}
+            accessibilityLabel={`Foto profil ${item.partnerName}`}
+        />
+        <View style={styles.conversationContent}>
+            <View style={styles.conversationTop}>
+                <Text style={styles.partnerName} numberOfLines={1}>{item.partnerName}</Text>
+                <Text style={styles.timeText}>{item.lastMessageTime}</Text>
+            </View>
+            <View style={styles.conversationBottom}>
+                <Text style={styles.previewText} numberOfLines={1}>
+                    🔒 Terenkripsi
+                </Text>
+                {item.unreadCount > 0 && (
+                    <View style={styles.unreadBadge} accessible={false}>
+                        <Text style={styles.unreadText}>{item.unreadCount}</Text>
+                    </View>
+                )}
+            </View>
+        </View>
+    </TouchableOpacity>
+));
+
 export const ChatListScreen: React.FC = () => {
     const navigation = useNavigation<Nav>();
+
+    const handlePress = useCallback((item: ConversationItem) => {
+        navigation.navigate('ChatRoom', {
+            conversationId: item.id,
+            partnerName: item.partnerName,
+        });
+    }, [navigation]);
+
+    const renderItem: ListRenderItem<ConversationItem> = useCallback(({ item }) => (
+        <ConversationListItem item={item} onPress={handlePress} />
+    ), [handlePress]);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -45,48 +97,9 @@ export const ChatListScreen: React.FC = () => {
             <FlatList
                 data={MOCK_CONVERSATIONS}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <TouchableOpacity
-                        style={styles.conversationItem}
-                        onPress={() => navigation.navigate('ChatRoom', {
-                            conversationId: item.id,
-                            partnerName: item.partnerName,
-                        })}
-                        accessibilityRole="button"
-                        accessibilityLabel={`${item.partnerName}${item.unreadCount > 0 ? `, ${item.unreadCount} pesan belum dibaca` : ''}${item.isOnline ? ', sedang online' : ''}, ${item.lastMessageTime}`}
-                    >
-                        <CAvatar
-                            name={item.partnerName}
-                            size="md"
-                            isOnline={item.isOnline}
-                            accessibilityLabel={`Foto profil ${item.partnerName}`}
-                        />
-                        <View style={styles.conversationContent}>
-                            <View style={styles.conversationTop}>
-                                <Text style={styles.partnerName} numberOfLines={1}>{item.partnerName}</Text>
-                                <Text style={styles.timeText}>{item.lastMessageTime}</Text>
-                            </View>
-                            <View style={styles.conversationBottom}>
-                                <Text style={styles.previewText} numberOfLines={1}>
-                                    🔒 Terenkripsi
-                                </Text>
-                                {item.unreadCount > 0 && (
-                                    <View style={styles.unreadBadge} accessible={false}>
-                                        <Text style={styles.unreadText}>{item.unreadCount}</Text>
-                                    </View>
-                                )}
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                )}
-                ItemSeparatorComponent={() => <View style={styles.separator} />}
-                ListEmptyComponent={
-                    <View style={styles.empty}>
-                        <Text style={styles.emptyText}>💬</Text>
-                        <Text style={styles.emptyMsg}>Belum ada percakapan</Text>
-                        <Text style={styles.emptySubMsg}>Match dengan seseorang untuk mulai chat</Text>
-                    </View>
-                }
+                renderItem={renderItem}
+                ItemSeparatorComponent={ItemSeparator}
+                ListEmptyComponent={ListEmpty}
             />
         </SafeAreaView>
     );

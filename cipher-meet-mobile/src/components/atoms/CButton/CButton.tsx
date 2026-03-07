@@ -3,7 +3,7 @@ import {
     TouchableOpacity, Text, ActivityIndicator, ViewStyle,
     TextStyle, StyleSheet,
 } from 'react-native';
-import { Colors, FontSize, FontFamily, Spacing, BorderRadius, Shadow, MinTouchTarget } from '../../theme';
+import { Colors, FontSize, FontFamily, Spacing, BorderRadius, Shadow, MinTouchTarget } from '../../../theme';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';

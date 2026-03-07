@@ -36,7 +36,7 @@ export const MatchAlert: React.FC<MatchAlertProps> = ({
                 Animated.timing(scale, { toValue: 0.8, duration: 200, useNativeDriver: true, easing: Easing.in(Easing.ease) }),
             ]).start();
         }
-    }, [visible]);
+    }, [visible, opacity, scale]);
 
     return (
         <Modal

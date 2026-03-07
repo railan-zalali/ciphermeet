@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
 import {
-    View, Text, FlatList, Animated, TouchableOpacity,
+    View, Text, FlatList, TouchableOpacity,
     StyleSheet, Dimensions, StatusBar,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Colors, FontSize, FontFamily, Spacing, BorderRadius, MinTouchTarget } from '../../theme';
+import { Colors, FontSize, FontFamily, Spacing, MinTouchTarget } from '../../theme';
 import { CButton } from '../../components/atoms/CButton/CButton';
 import { AuthStackParams } from '../../navigation/RootNavigator';
 

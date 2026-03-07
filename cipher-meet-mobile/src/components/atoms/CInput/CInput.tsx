@@ -3,7 +3,7 @@ import {
     View, Text, TextInput, TouchableOpacity,
     StyleSheet, TextInputProps, Animated,
 } from 'react-native';
-import { Colors, FontSize, FontFamily, Spacing, BorderRadius, MinTouchTarget } from '../../theme';
+import { Colors, FontSize, FontFamily, Spacing, BorderRadius, MinTouchTarget } from '../../../theme';
 
 interface CInputProps extends TextInputProps {
     label: string;
@@ -25,7 +25,7 @@ export const CInput: React.FC<CInputProps> = ({
     trailingIconAccessibilityLabel,
     ...rest
 }) => {
-    const [isFocused, setIsFocused] = useState(false);
+    const [_isFocused, setIsFocused] = useState(false);
     const borderAnim = useRef(new Animated.Value(0)).current;
 
     const handleFocus = () => {

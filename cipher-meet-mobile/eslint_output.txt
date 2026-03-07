@@ -1,0 +1,108 @@
+
+> CipherMeetMobile@0.0.1 lint
+> eslint .
+
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\components\atoms\CAvatar\CAvatar.tsx
+   3:18  error    'FontSize' is defined but never used        @typescript-eslint/no-unused-vars
+   3:40  error    'BorderRadius' is defined but never used    @typescript-eslint/no-unused-vars
+   3:54  error    'MinTouchTarget' is defined but never used  @typescript-eslint/no-unused-vars
+  76:25  warning  Inline style: { right: 0, bottom: 0 }       react-native/no-inline-styles
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\components\atoms\CBadge\CBadge.tsx
+  32:35  warning  Inline style: { paddingVertical: 'isSmall ? 2 : 4' }  react-native/no-inline-styles
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\components\atoms\CChip\CChip.tsx
+  5:63  error  'MinTouchTarget' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\components\atoms\CInput\CInput.tsx
+  28:12  error  'isFocused' is assigned a value but never used. Allowed unused elements of array destructuring must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\components\atoms\CSlider\CSlider.tsx
+  34:8  error  React Hook useCallback has missing dependencies: 'toX' and 'translateX'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\components\molecules\ProfileCard\ProfileCard.tsx
+  5:10  error  'CAvatar' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\components\organisms\MatchAlert\MatchAlert.tsx
+  39:8  error  React Hook useEffect has missing dependencies: 'opacity' and 'scale'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\components\organisms\SwipeStack\SwipeStack.tsx
+  4:5  error  'AccessibilityInfo' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\hooks\useDiscovery.ts
+   2:24  error    'DiscoveryProfile' is defined but never used                               @typescript-eslint/no-unused-vars
+  40:17  warning  Expected 'undefined' and instead saw 'void'                                no-void
+  43:26  error    'context' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  45:13  warning  Expected 'undefined' and instead saw 'void'                                no-void
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\hooks\useUsers.ts
+   3:10  error    'useAuthStore' is defined but never used     @typescript-eslint/no-unused-vars
+  29:13  warning  Expected 'undefined' and instead saw 'void'  no-void
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\navigation\RootNavigator.tsx
+   87:33  warning  Do not define components during render. React will see a new component type on every render and destroy the entire subtree’s DOM nodes and state (https://reactjs.org/docs/reconciliation.html#elements-of-different-types). Instead, move this component definition out of the parent component “MainTabs” and pass data as props. If you want to allow component creation in props, set allowAsProps option to true  react/no-unstable-nested-components
+   87:61  warning  Inline style: { fontSize: 20 }                                                                                                                                                                                                                                                                                                                                                                                         react-native/no-inline-styles
+   96:33  warning  Do not define components during render. React will see a new component type on every render and destroy the entire subtree’s DOM nodes and state (https://reactjs.org/docs/reconciliation.html#elements-of-different-types). Instead, move this component definition out of the parent component “MainTabs” and pass data as props. If you want to allow component creation in props, set allowAsProps option to true  react/no-unstable-nested-components
+   96:61  warning  Inline style: { fontSize: 20 }                                                                                                                                                                                                                                                                                                                                                                                         react-native/no-inline-styles
+  105:33  warning  Do not define components during render. React will see a new component type on every render and destroy the entire subtree’s DOM nodes and state (https://reactjs.org/docs/reconciliation.html#elements-of-different-types). Instead, move this component definition out of the parent component “MainTabs” and pass data as props. If you want to allow component creation in props, set allowAsProps option to true  react/no-unstable-nested-components
+  105:61  warning  Inline style: { fontSize: 20 }                                                                                                                                                                                                                                                                                                                                                                                         react-native/no-inline-styles
+  114:33  warning  Do not define components during render. React will see a new component type on every render and destroy the entire subtree’s DOM nodes and state (https://reactjs.org/docs/reconciliation.html#elements-of-different-types). Instead, move this component definition out of the parent component “MainTabs” and pass data as props. If you want to allow component creation in props, set allowAsProps option to true  react/no-unstable-nested-components
+  114:61  warning  Inline style: { fontSize: 20 }                                                                                                                                                                                                                                                                                                                                                                                         react-native/no-inline-styles
+  123:33  warning  Do not define components during render. React will see a new component type on every render and destroy the entire subtree’s DOM nodes and state (https://reactjs.org/docs/reconciliation.html#elements-of-different-types). Instead, move this component definition out of the parent component “MainTabs” and pass data as props. If you want to allow component creation in props, set allowAsProps option to true  react/no-unstable-nested-components
+  123:61  warning  Inline style: { fontSize: 20 }                                                                                                                                                                                                                                                                                                                                                                                         react-native/no-inline-styles
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\screens\auth\LoginScreen.tsx
+  72:48  warning  Inline style: { fontSize: 18 }  react-native/no-inline-styles
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\screens\auth\OnboardingScreen.tsx
+  3:27  error  'Animated' is defined but never used      @typescript-eslint/no-unused-vars
+  8:49  error  'BorderRadius' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\screens\auth\RegisterScreen.tsx
+   22:11  error    'colors' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  114:48  warning  Inline style: { fontSize: 18 }               react-native/no-inline-styles
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\screens\auth\SplashScreen.tsx
+   4:5  error  'AccessibilityInfo' is defined but never used                                                                                                                      @typescript-eslint/no-unused-vars
+  32:8  error  React Hook useEffect has missing dependencies: 'logoOpacity', 'logoScale', 'navigation', and 'taglineOpacity'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\screens\chat\ChatListScreen.tsx
+  82:41  warning  Do not define components during render. React will see a new component type on every render and destroy the entire subtree’s DOM nodes and state (https://reactjs.org/docs/reconciliation.html#elements-of-different-types). Instead, move this component definition out of the parent component “ChatListScreen” and pass data as props. If you want to allow component creation in props, set allowAsProps option to true  react/no-unstable-nested-components
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\screens\chat\ChatRoomScreen.tsx
+   26:26  error    'partnerAvatar' is assigned a value but never used                                                                 @typescript-eslint/no-unused-vars
+   29:22  error    'setIsTyping' is assigned a value but never used. Allowed unused elements of array destructuring must match /^_/u  @typescript-eslint/no-unused-vars
+  121:38  warning  Inline style: { fontSize: 20 }                                                                                     react-native/no-inline-styles
+  138:42  warning  Inline style: { fontSize: 20 }                                                                                     react-native/no-inline-styles
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\screens\discovery\ActivityScreen.tsx
+  8:63  error  'MinTouchTarget' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\screens\discovery\DiscoveryScreen.tsx
+  29:8  error  React Hook useEffect has missing dependencies: 'profiles.length' and 'setProfiles'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\screens\premium\PremiumScreen.tsx
+   5:63  error    'MinTouchTarget' is defined but never used  @typescript-eslint/no-unused-vars
+   5:79  error    'Shadow' is defined but never used          @typescript-eslint/no-unused-vars
+  65:74  warning  Inline style: { borderWidth: 2 }            react-native/no-inline-styles
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\screens\profile\AccessibilitySettingsScreen.tsx
+  3:84  error  'Switch' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\screens\profile\SecurityCenterScreen.tsx
+  60:77  warning  Inline style: { fontSize: 22 }  react-native/no-inline-styles
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\screens\wizard\ProfileWizardScreen.tsx
+   13:10  error    'useAuthStore' is defined but never used  @typescript-eslint/no-unused-vars
+   79:42  warning  Inline style: { fontSize: 32 }            react-native/no-inline-styles
+  194:22  warning  Inline style: { fontSize: 64 }            react-native/no-inline-styles
+  229:22  warning  Inline style: { fontSize: 64 }            react-native/no-inline-styles
+  249:28  warning  Inline style: { width: '90%' }            react-native/no-inline-styles
+  320:26  warning  Inline style: { flex: 1 }                 react-native/no-inline-styles
+
+C:\Railan\New folder\ciphermeet\cipher-meet-mobile\src\stores\socketStore.ts
+  15:6  error  'ReadEvent' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 53 problems (26 errors, 27 warnings)
+

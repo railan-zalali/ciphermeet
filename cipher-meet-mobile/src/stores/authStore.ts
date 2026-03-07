@@ -1,7 +1,5 @@
 import { create } from 'zustand';
-import { MMKV } from 'react-native-mmkv';
-
-const storage = new MMKV({ id: 'auth-store', encryptionKey: 'cipher-meet-auth-key' });
+import { storage, StorageKeys } from '../utils/storage';
 
 interface User {
     id: string;
@@ -22,32 +20,52 @@ interface AuthState {
     logout: () => void;
 }
 
-// Persist tokens in encrypted MMKV
-const persistedAccessToken = storage.getString('accessToken') ?? null;
-const persistedRefreshToken = storage.getString('refreshToken') ?? null;
-const persistedUser = storage.getString('user');
+// Initialize store with async loading
+export const useAuthStore = create<AuthState>((set) => {
+    // Initial load
+    const loadStorage = async () => {
+        try {
+            const accessToken = await storage.getString(StorageKeys.ACCESS_TOKEN);
+            const refreshToken = await storage.getString(StorageKeys.REFRESH_TOKEN);
+            const userStr = await storage.getString(StorageKeys.USER);
+            
+            if (accessToken) {
+                set({ 
+                    isAuthenticated: true,
+                    accessToken,
+                    refreshToken,
+                    user: userStr ? JSON.parse(userStr) : null 
+                });
+            }
+        } catch (error) {
+            console.error('Failed to load auth state:', error);
+        }
+    };
+    
+    loadStorage();
 
-export const useAuthStore = create<AuthState>((set) => ({
-    isAuthenticated: !!persistedAccessToken,
-    accessToken: persistedAccessToken,
-    refreshToken: persistedRefreshToken,
-    user: persistedUser ? (JSON.parse(persistedUser) as User) : null,
+    return {
+        isAuthenticated: false,
+        accessToken: null,
+        refreshToken: null,
+        user: null,
 
-    setTokens: (access, refresh) => {
-        storage.set('accessToken', access);
-        storage.set('refreshToken', refresh);
-        set({ accessToken: access, refreshToken: refresh, isAuthenticated: true });
-    },
+        setTokens: (access, refresh) => {
+            storage.set(StorageKeys.ACCESS_TOKEN, access);
+            storage.set(StorageKeys.REFRESH_TOKEN, refresh);
+            set({ accessToken: access, refreshToken: refresh, isAuthenticated: true });
+        },
 
-    setUser: (user) => {
-        storage.set('user', JSON.stringify(user));
-        set({ user });
-    },
+        setUser: (user) => {
+            storage.set(StorageKeys.USER, JSON.stringify(user));
+            set({ user });
+        },
 
-    logout: () => {
-        storage.delete('accessToken');
-        storage.delete('refreshToken');
-        storage.delete('user');
-        set({ isAuthenticated: false, accessToken: null, refreshToken: null, user: null });
-    },
-}));
+        logout: () => {
+            storage.delete(StorageKeys.ACCESS_TOKEN);
+            storage.delete(StorageKeys.REFRESH_TOKEN);
+            storage.delete(StorageKeys.USER);
+            set({ isAuthenticated: false, accessToken: null, refreshToken: null, user: null });
+        },
+    };
+});

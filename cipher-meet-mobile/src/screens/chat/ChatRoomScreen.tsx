@@ -14,19 +14,28 @@ import { RootStackParams } from '../../navigation/RootNavigator';
 type Nav = StackNavigationProp<RootStackParams>;
 type RouteT = RouteProp<RootStackParams, 'ChatRoom'>;
 
-const MOCK_MESSAGES = [
-    { id: 'm1', content: 'Heyy! 👋 Match kita! Seneng banget~', isSent: false, timestamp: '10:24', status: 'read' as const },
-    { id: 'm2', content: 'Hai! Iya haha, aku juga seneng 😊 Nama kamu Sari?', isSent: true, timestamp: '10:25', status: 'read' as const },
-    { id: 'm3', content: 'Yapp! Kamu Budi? Suka gaming juga ternyata~', isSent: false, timestamp: '10:26', status: 'read' as const },
+// ─── Message type ─────────────────────────────────────────────────────────────
+interface Message {
+    id: string;
+    content: string;
+    isSent: boolean;
+    timestamp: string;
+    status: 'sent' | 'delivered' | 'read';
+}
+
+const MOCK_MESSAGES: Message[] = [
+    { id: 'm1', content: 'Heyy! 👋 Match kita! Seneng banget~', isSent: false, timestamp: '10:24', status: 'read' },
+    { id: 'm2', content: 'Hai! Iya haha, aku juga seneng 😊 Nama kamu Sari?', isSent: true, timestamp: '10:25', status: 'read' },
+    { id: 'm3', content: 'Yapp! Kamu Budi? Suka gaming juga ternyata~', isSent: false, timestamp: '10:26', status: 'read' },
 ];
 
 export const ChatRoomScreen: React.FC = () => {
     const navigation = useNavigation<Nav>();
     const route = useRoute<RouteT>();
-    const { partnerName, partnerAvatar } = route.params;
-    const [messages, setMessages] = useState(MOCK_MESSAGES);
+    const { partnerName } = route.params;
+    const [messages, setMessages] = useState<Message[]>(MOCK_MESSAGES);
     const [inputText, setInputText] = useState('');
-    const [isTyping, setIsTyping] = useState(false);
+    const [isTyping] = useState(false);
 
     const sendMessage = () => {
         if (!inputText.trim()) return;

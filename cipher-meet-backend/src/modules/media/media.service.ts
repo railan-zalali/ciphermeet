@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
 import { createHash } from 'crypto';
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import sharp from 'sharp';
 
 @Injectable()
 export class MediaService {
@@ -30,21 +31,39 @@ export class MediaService {
 
     // ─── Upload Profile Photo ─────────────────────────────────────────────────────
     async uploadProfilePhoto(userId: string, file: Express.Multer.File): Promise<{ url: string; key: string }> {
-        const ext = this.getExtension(file.mimetype);
-        const hash = createHash('sha256').update(file.buffer).digest('hex').slice(0, 8);
+        let processedBuffer = file.buffer;
+        let contentType = file.mimetype;
+        let ext = this.getExtension(file.mimetype);
+
+        // Optimization: Resize to max 1080x1080 & convert to JPEG (quality 80)
+        if (file.mimetype.startsWith('image/')) {
+            try {
+                processedBuffer = await sharp(file.buffer)
+                    .rotate() // Auto-rotate based on EXIF
+                    .resize(1080, 1080, { fit: 'cover', withoutEnlargement: true })
+                    .jpeg({ quality: 80, mozjpeg: true })
+                    .toBuffer();
+                contentType = 'image/jpeg';
+                ext = 'jpg';
+            } catch (error) {
+                this.logger.warn(`Image optimization failed for user ${userId}, falling back to original. Error: ${error}`);
+            }
+        }
+
+        const hash = createHash('sha256').update(processedBuffer).digest('hex').slice(0, 8);
         const key = `photos/${userId}/${uuidv4()}-${hash}.${ext}`;
 
         await this.s3.send(new PutObjectCommand({
             Bucket: this.bucket,
             Key: key,
-            Body: file.buffer,
-            ContentType: file.mimetype,
+            Body: processedBuffer,
+            ContentType: contentType,
             CacheControl: 'public, max-age=31536000, immutable',
             Metadata: { userId, uploadedAt: new Date().toISOString() },
         }));
 
         const url = this.cdnBase ? `${this.cdnBase}/${key}` : `https://${this.bucket}.r2.dev/${key}`;
-        this.logger.log(`Photo uploaded: ${key}`);
+        this.logger.log(`Photo uploaded: ${key} (Size: ${processedBuffer.length} bytes)`);
         return { url, key };
     }
 

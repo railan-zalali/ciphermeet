@@ -16,8 +16,7 @@ import { RefreshToken } from '../keys/entities/keys.entities';
         JwtModule.registerAsync({
             inject: [ConfigService],
             useFactory: (config: ConfigService) => ({
-                secret: config.get<string>('jwt.secret'),
-                signOptions: { expiresIn: config.get<string>('jwt.expiresIn') },
+                signOptions: { expiresIn: config.get<string | number>('jwt.expiresIn') as any },
             }),
         }),
     ],

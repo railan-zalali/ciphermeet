@@ -2,7 +2,7 @@ import React from 'react';
 import {
     View, Text, ScrollView, SafeAreaView, StatusBar, TouchableOpacity, StyleSheet, Alert,
 } from 'react-native';
-import { Colors, FontSize, FontFamily, Spacing, BorderRadius, MinTouchTarget, Shadow } from '../../theme';
+import { Colors, FontSize, FontFamily, Spacing, BorderRadius } from '../../theme';
 import { CBadge } from '../../components/atoms/CBadge/CBadge';
 import { CButton } from '../../components/atoms/CButton/CButton';
 
@@ -62,7 +62,7 @@ export const PremiumScreen: React.FC = () => {
                 {PLANS.map((plan) => (
                     <TouchableOpacity
                         key={plan.id}
-                        style={[styles.planCard, selected === plan.id && { borderColor: plan.color, borderWidth: 2 }]}
+                        style={[styles.planCard, selected === plan.id && { borderColor: plan.color, ...styles.planCardSelected }]}
                         onPress={() => setSelected(plan.id)}
                         accessibilityRole="radio"
                         accessibilityState={{ checked: selected === plan.id }}
@@ -131,6 +131,9 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.card, borderRadius: BorderRadius.lg,
         padding: Spacing.lg, borderWidth: 1, borderColor: Colors.border,
         gap: Spacing.sm, position: 'relative', overflow: 'hidden',
+    },
+    planCardSelected: {
+        borderWidth: 2,
     },
     planHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: Spacing.sm },
     planName: { fontFamily: FontFamily.displayFallback, fontSize: FontSize.xl, fontWeight: '700' },

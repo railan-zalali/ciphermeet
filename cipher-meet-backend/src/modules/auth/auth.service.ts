@@ -65,8 +65,29 @@ export class AuthService {
         const key = `otp:${phoneNumber}`;
 
         await this.redis.setex(key, ttl, otp);
-        // In production: integrate with Twilio / Vonage / local SMS gateway
-        this.logger.log(`OTP for ${phoneNumber}: ${otp} (dev mode)`);
+        
+        // Send via SMS Gateway
+        await this.sendSms(phoneNumber, `Kode OTP CipherMeet Anda adalah: ${otp}. Jangan berikan kode ini kepada siapa pun.`);
+    }
+
+    /**
+     * Sends an SMS using the configured provider.
+     * In development/test, this will just log the message.
+     */
+    private async sendSms(to: string, message: string): Promise<void> {
+        const nodeEnv = this.configService.get<string>('NODE_ENV');
+        const isProd = nodeEnv === 'production';
+
+        if (isProd) {
+            // TODO: Integrate with real SMS provider (Twilio, Vonage, Wablas, etc.)
+            // Example: await this.twilioClient.messages.create({ ... })
+            
+            // For now, we log a warning if no provider is active in production
+            this.logger.warn(`[SMS-PROD] SMS Gateway not configured. Message to ${to} was not sent.`);
+        } else {
+            // Development/Staging: Log OTP to console for easy testing
+            this.logger.log(`[SMS-DEV] 📨 To: ${to} | Msg: ${message}`);
+        }
     }
 
     async verifyOtp(dto: VerifyOtpDto) {
@@ -112,8 +133,7 @@ export class AuthService {
         const payload = { sub: user.id, email: user.email, username: user.fullName };
 
         const accessToken = this.jwtService.sign(payload, {
-            secret: this.configService.get<string>('jwt.secret'),
-            expiresIn: this.configService.get<string>('jwt.expiresIn'),
+            expiresIn: this.configService.get<string | number>('jwt.expiresIn') as any,
         });
 
         const refreshTokenValue = uuidv4();

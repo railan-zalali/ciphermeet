@@ -1,0 +1,91 @@
+# CipherMeet — Full Build Task Checklist
+
+## Phase 1: Backend (NestJS)
+- [x] **1.1** Expand [main.ts](file:///c:/Railan/New folder/ciphermeet/cipher-meet-backend/src/main.ts) — Helmet, CORS, Swagger, global pipes, WebSocket adapter
+- [x] **1.2** Create `common/` — guards, decorators, interceptors, pipes, filters
+- [x] **1.3** Auth Module — register, login, OTP, JWT + refresh token, Argon2id
+- [x] **1.4** User Module — CRUD, profile wizard steps, geolocation
+- [x] **1.5** Discovery Module — swipe feed, like/pass/super-like, mutual match detection
+- [x] **1.6** Chat Module — E2EE message relay (MongoDB), typing indicator, WebSocket gateway
+- [x] **1.7** Notification Module — FCM push, BullMQ job queue, processor
+- [x] **1.8** Key Exchange Module — X3DH pre-key bundles, SPK rotation (Signal Protocol)
+- [x] **1.9** Security Module — 2FA TOTP, active sessions, activity log
+- [x] **1.10** Premium Module — subscription tiers, incognito, super likes
+- [x] **1.11** Database schemas — TypeORM entities (PG) + Mongoose schemas (Mongo)
+- [x] **1.12** Docker Compose — Postgres, MongoDB, Redis services + multi-stage Dockerfile
+- [x] **1.13** Environment config — [.env.example](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/.env.example), ConfigModule
+- [x] **1.14** Media Module — S3/R2 photo + voice upload (AWS SDK v3)
+
+## Phase 2: Mobile App (React Native)
+### 2.1 Project Bootstrap
+- [x] Init bare React Native app `cipher-meet-mobile/`
+- [x] Configure TypeScript, paths alias (tsconfig.json)
+- [ ] Install & link all dependencies
+
+### 2.2 Design System & Atoms
+- [x] `theme.ts` — colors, typography, spacing (incl. BorderRadius.xl/xxl), radii, shadows
+- [x] [CButton](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/src/components/atoms/CButton/CButton.tsx#24-78) — Primary, Secondary, Ghost, Danger variants, a11y
+- [x] [CInput](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/src/components/atoms/CInput/CInput.tsx#18-101) — label, error, helper, accessibilityLabel
+- [x] [CAvatar](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/src/components/atoms/CAvatar/CAvatar.tsx#26-103) — size variants, online indicator, verified badge, photoUrl alias
+- [x] [CBadge](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/src/components/atoms/CBadge/CBadge.tsx#24-42) — 5 semantic variants, 2 sizes
+- [x] [CChip](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/src/components/atoms/CChip/CChip.tsx#19-41), [CSwitch](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/src/components/atoms/CSwitch/CSwitch.tsx#15-42)
+- [x] [CSlider](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/src/components/atoms/CSlider/CSlider.tsx#19-90) — PanResponder + Reanimated v3, step support, accessibilityRole=adjustable
+
+### 2.3 Navigation Structure
+- [x] Root navigator — Auth / Main split
+- [x] Auth stack — Splash, Onboarding, Login, Register, OTP, ProfileWizard
+- [x] Main tabs — Discovery, Activity, Chat, Premium, Profile
+- [x] Modal stack — ChatRoom, SecurityCenter, PrivacySettings
+
+### 2.4 Auth Screens
+- [x] Splash screen (animated logo spring-in)
+- [x] Onboarding (3 slides, dot indicators)
+- [x] Register screen (full validation + password strength)
+- [x] OTP verification (6-digit, SMS autofill)
+- [x] Login screen (biometric placeholder)
+
+### 2.5 Profile Setup Wizard (5 steps)
+- [x] Shell with step progress bar, back/next navigation
+- [ ] Step 1 — Photo upload (drag-to-reorder grid)
+- [ ] Step 2 — Bio + MBTI + Interest tags (with CSlider)
+- [ ] Step 3 — Partner preferences (CSlider age/distance)
+- [ ] Step 4 — Location permission + map preview
+- [ ] Step 5 — Selfie verification
+
+### 2.6 Discovery / Swipe
+- [x] [ProfileCard](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/src/components/molecules/ProfileCard/ProfileCard.tsx#25-102) — full-bleed photo, gradient overlay, info chips
+- [x] [SwipeStack](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/src/components/organisms/SwipeStack/SwipeStack.tsx#26-176) — Reanimated v3 + Gesture Handler, 3-layer z-stack
+- [x] Swipe overlays (SUKA / LEWAT / SUPER)
+- [x] Action buttons row (alt accessibility path)
+- [x] [MatchAlert](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/src/components/organisms/MatchAlert/MatchAlert.tsx#19-101) modal — spring animation, E2EE badge, CTA buttons
+
+### 2.7 Chat
+- [x] E2EE key management store (`e2eeStore`, stub encrypt/decrypt)
+- [x] `ConversationList` screen with React Query
+- [x] [ChatRoom](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/src/screens/chat/ChatRoomScreen.tsx#23-146) screen — MessageBubble, EncryptionBanner, input bar
+- [x] Socket.io store (`socketStore`) — connect/disconnect/send/typing/read
+- [ ] VoiceNote — recording + waveform playback
+- [ ] Disappearing messages toggle + countdown timer
+
+### 2.8 Profile & Settings
+- [x] My Profile screen — stats, menu items
+- [x] Privacy Settings screen
+- [x] Security Center screen — E2EE fingerprint, sessions, 2FA
+- [ ] Accessibility Settings screen
+
+### 2.9 State & Services
+- [x] Zustand stores — `authStore`, `discoveryStore`, `socketStore`, `e2eeStore`
+- [x] React Query hooks — [useDiscovery](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/src/hooks/useDiscovery.ts#10-26), `useChat`, `useUsers`
+- [x] API service layer — [apiClient.ts](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/src/services/api/apiClient.ts) (axios+JWT refresh), `auth/discovery/chat/users.api.ts`
+- [x] TypeScript types — [types/user.ts](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/src/types/user.ts)
+
+## Phase 3: Testing & Verification
+- [ ] Backend unit tests (Jest) — auth, discovery, chat services
+- [ ] Mobile component tests (RNTL) — atoms, molecules
+- [ ] WCAG contrast ratio automated check
+- [ ] E2E happy path documented (Detox spec)
+
+## Phase 4: DevOps
+- [x] [docker-compose.yml](file:///c:/Railan/New folder/ciphermeet/docker-compose.yml) — full local stack
+- [x] [.env.example](file:///c:/Railan/New folder/ciphermeet/cipher-meet-mobile/.env.example) for both backend and mobile
+- [x] GitHub Actions CI workflow ([.github/workflows/ci.yml](file:///c:/Railan/New folder/ciphermeet/.github/workflows/ci.yml))

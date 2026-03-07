@@ -1,8 +1,7 @@
 import { create } from 'zustand';
 import { io, Socket } from 'socket.io-client';
-import { MMKV } from 'react-native-mmkv';
-
-const tokenStorage = new MMKV({ id: 'auth-tokens' });
+import { storage, StorageKeys } from '../utils/storage';
+import { WS_CHAT_URL } from '../config/env';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 interface IncomingMessage {
@@ -12,8 +11,6 @@ interface IncomingMessage {
 }
 
 type TypingEvent = { userId: string };
-type ReadEvent = { messageId: string; readAt: string };
-type ReactionEvent = { messageId: string; userId: string; emoji: string };
 
 type MessageListener = (msg: IncomingMessage) => void;
 type TypingListener = (event: TypingEvent) => void;
@@ -40,14 +37,14 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socket: null,
     isConnected: false,
 
-    connect: () => {
+    connect: async () => {
         const { socket } = get();
         if (socket?.connected) return;
 
-        const token = tokenStorage.getString('accessToken');
+        const token = await storage.getString(StorageKeys.ACCESS_TOKEN);
         if (!token) return;
 
-        const newSocket = io('http://10.0.2.2:3000/chat', {
+        const newSocket = io(WS_CHAT_URL, {
             auth: { token },
             transports: ['websocket'],
             reconnectionAttempts: 5,
@@ -56,7 +53,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
 
         newSocket.on('connect', () => {
             set({ isConnected: true });
-            console.log('[Socket] Connected:', newSocket.id);
+            // console.log('[Socket] Connected:', newSocket.id);
         });
 
         newSocket.on('disconnect', () => {
@@ -64,7 +61,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         });
 
         newSocket.on('connect_error', (err) => {
-            console.warn('[Socket] Connection error:', err.message);
+            // console.warn('[Socket] Connection error:', err.message);
         });
 
         set({ socket: newSocket });

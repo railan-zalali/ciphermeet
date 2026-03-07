@@ -2,7 +2,7 @@ import React from 'react';
 import {
     TouchableOpacity, Text, StyleSheet, ViewStyle,
 } from 'react-native';
-import { Colors, FontSize, FontFamily, Spacing, BorderRadius, MinTouchTarget } from '../../theme';
+import { Colors, FontSize, FontFamily, Spacing, BorderRadius } from '../../../theme';
 
 export type ChipVariant = 'outlined' | 'filled' | 'selected';
 

@@ -1,0 +1,25 @@
+src/components/atoms/CAvatar/CAvatar.tsx(3,76): error TS2307: Cannot find module '../../theme' or its corresponding type declarations.
+src/components/atoms/CButton/CButton.tsx(6,93): error TS2307: Cannot find module '../../theme' or its corresponding type declarations.
+src/components/atoms/CChip/CChip.tsx(5,85): error TS2307: Cannot find module '../../theme' or its corresponding type declarations.
+src/components/atoms/CInput/CInput.tsx(6,85): error TS2307: Cannot find module '../../theme' or its corresponding type declarations.
+src/components/atoms/CSwitch/CSwitch.tsx(5,71): error TS2307: Cannot find module '../../theme' or its corresponding type declarations.
+src/components/molecules/MessageBubble/MessageBubble.tsx(3,69): error TS2307: Cannot find module '../../theme' or its corresponding type declarations.
+src/components/molecules/ProfileCard/ProfileCard.tsx(4,77): error TS2307: Cannot find module '../../theme' or its corresponding type declarations.
+src/components/molecules/ProfileCard/ProfileCard.tsx(5,25): error TS2307: Cannot find module '../atoms/CAvatar/CAvatar' or its corresponding type declarations.
+src/components/molecules/ProfileCard/ProfileCard.tsx(6,23): error TS2307: Cannot find module '../atoms/CChip/CChip' or its corresponding type declarations.
+src/components/organisms/SwipeStack/SwipeStack.tsx(11,85): error TS2307: Cannot find module '../../theme' or its corresponding type declarations.
+src/components/organisms/SwipeStack/SwipeStack.tsx(12,46): error TS2307: Cannot find module '../molecules/ProfileCard/ProfileCard' or its corresponding type declarations.
+src/navigation/RootNavigator.tsx(26,39): error TS2307: Cannot find module '../screens/profile/PrivacySettingsScreen' or its corresponding type declarations.
+src/screens/chat/ChatRoomScreen.tsx(33,21): error TS2345: Argument of type '(prev: { id: string; content: string; isSent: boolean; timestamp: string; status: "read"; }[]) => ({ id: string; content: string; isSent: boolean; timestamp: string; status: "read"; } | { id: string; content: string; isSent: true; timestamp: string; status: "sent"; })[]' is not assignable to parameter of type 'SetStateAction<{ id: string; content: string; isSent: boolean; timestamp: string; status: "read"; }[]>'.
+  Type '(prev: { id: string; content: string; isSent: boolean; timestamp: string; status: "read"; }[]) => ({ id: string; content: string; isSent: boolean; timestamp: string; status: "read"; } | { id: string; content: string; isSent: true; timestamp: string; status: "sent"; })[]' is not assignable to type '(prevState: { id: string; content: string; isSent: boolean; timestamp: string; status: "read"; }[]) => { id: string; content: string; isSent: boolean; timestamp: string; status: "read"; }[]'.
+    Type '({ id: string; content: string; isSent: boolean; timestamp: string; status: "read"; } | { id: string; content: string; isSent: true; timestamp: string; status: "sent"; })[]' is not assignable to type '{ id: string; content: string; isSent: boolean; timestamp: string; status: "read"; }[]'.
+      Type '{ id: string; content: string; isSent: boolean; timestamp: string; status: "read"; } | { id: string; content: string; isSent: true; timestamp: string; status: "sent"; }' is not assignable to type '{ id: string; content: string; isSent: boolean; timestamp: string; status: "read"; }'.
+        Type '{ id: string; content: string; isSent: true; timestamp: string; status: "sent"; }' is not assignable to type '{ id: string; content: string; isSent: boolean; timestamp: string; status: "read"; }'.
+          Types of property 'status' are incompatible.
+            Type '"sent"' is not assignable to type '"read"'.
+src/screens/profile/AccessibilitySettingsScreen.tsx(122,37): error TS2322: Type '{ value: boolean; onValueChange: (v: boolean) => void; accessibilityLabel: string; }' is not assignable to type 'IntrinsicAttributes & CSwitchProps'.
+  Property 'onValueChange' does not exist on type 'IntrinsicAttributes & CSwitchProps'.
+src/screens/wizard/ProfileWizardScreen.tsx(266,13): error TS2339: Property 'setAuthenticated' does not exist on type 'AuthState'.
+src/services/api/apiClient.ts(5,21): error TS2693: 'MMKV' only refers to a type, but is being used as a value here.
+src/stores/authStore.ts(4,21): error TS2693: 'MMKV' only refers to a type, but is being used as a value here.
+src/stores/socketStore.ts(5,26): error TS2693: 'MMKV' only refers to a type, but is being used as a value here.

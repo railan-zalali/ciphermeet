@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { discoveryApi, DiscoveryProfile } from '../services/api/discovery.api';
+import { discoveryApi } from '../services/api/discovery.api';
 import { useDiscoveryStore } from '../stores/discoveryStore';
 
 export const DISCOVERY_KEYS = {
@@ -37,12 +37,12 @@ export function useSwipe() {
         },
         onSuccess: (res) => {
             if (res.data.data.matched) {
-                void queryClient.invalidateQueries({ queryKey: DISCOVERY_KEYS.matches });
+                queryClient.invalidateQueries({ queryKey: DISCOVERY_KEYS.matches }).catch(() => {});
             }
         },
-        onError: (_, __, context) => {
+        onError: (_, __, _context) => {
             // If error, restore card — for simplicity, refetch feed
-            void queryClient.invalidateQueries({ queryKey: DISCOVERY_KEYS.feed });
+            queryClient.invalidateQueries({ queryKey: DISCOVERY_KEYS.feed }).catch(() => {});
         },
     });
 }

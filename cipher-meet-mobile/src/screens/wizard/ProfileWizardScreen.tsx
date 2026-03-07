@@ -10,7 +10,6 @@ import { CButton } from '../../components/atoms/CButton/CButton';
 import { CChip } from '../../components/atoms/CChip/CChip';
 import { CSlider } from '../../components/atoms/CSlider/CSlider';
 import { AuthStackParams } from '../../navigation/RootNavigator';
-import { useAuthStore } from '../../stores/authStore';
 
 type Nav = StackNavigationProp<AuthStackParams, 'ProfileWizard'>;
 
@@ -263,7 +262,6 @@ const StepVerification: React.FC<{ state: WizardState; setState: React.Dispatch<
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 export const ProfileWizardScreen: React.FC = () => {
     const navigation = useNavigation<Nav>();
-    const { setAuthenticated } = useAuthStore();
     const [step, setStep] = useState(1);
     const [state, setState] = useState<WizardState>({
         photos: [], bio: '', mbti: '', interests: [],
