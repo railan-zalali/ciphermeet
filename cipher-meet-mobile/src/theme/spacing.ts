@@ -1,0 +1,45 @@
+// CipherMeet Design Tokens — Spacing (8px grid)
+export const Spacing = {
+    xs: 4,
+    sm: 8,
+    md: 16,
+    lg: 24,
+    xl: 32,
+    '2xl': 48,
+    '3xl': 64,
+} as const;
+
+export const BorderRadius = {
+    sm: 8,
+    md: 16,
+    lg: 24,
+    xl: 32,
+    xxl: 40,
+    full: 9999,
+} as const;
+
+export const Shadow = {
+    card: {
+        shadowColor: '#7C5CFC',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 24,
+        elevation: 8,
+    },
+    button: {
+        shadowColor: '#7C5CFC',
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.35,
+        shadowRadius: 32,
+        elevation: 12,
+    },
+    modal: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: -4 },
+        shadowOpacity: 0.6,
+        shadowRadius: 48,
+        elevation: 20,
+    },
+} as const;
+
+export const MinTouchTarget = 48; // WCAG 2.5.5 minimum touch target
