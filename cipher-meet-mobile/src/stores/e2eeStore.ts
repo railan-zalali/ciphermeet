@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import QuickCrypto from 'react-native-quick-crypto';
+import { Buffer } from 'buffer';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 // Simplified E2EE session representation (without @signalapp/libsignal-client for now)
@@ -44,30 +46,53 @@ export const useE2EEStore = create<E2EEState>((set, get) => ({
 
     getSession: (userId) => get().sessions[userId],
 
-    // ── STUB: Replace with real libsignal-client implementation ──────────────────
+    // ─── STUB: Replace with real libsignal-client implementation ──────────────────
     // In production: X3DH key agreement + Double Ratchet encryption
+    // CURRENT: AES-256-GCM (Better than hex encoding, but still symmetric only)
     encryptMessage: (plaintext: string, _receiverId: string): string => {
-        // TODO: implement real Signal Protocol encryption using @signalapp/libsignal-client
-        // Simple reversible encoding for stub (NOT real encryption)
-        const encoded = plaintext.split('').map((c) =>
-            c.charCodeAt(0).toString(16).padStart(2, '0')
-        ).join('');
-        return `ENCRYPTED::${encoded}`;
+        try {
+            // Generate a random 32-byte key (In real E2EE, this comes from X3DH)
+            // For now, we use a fixed derived key from the stub environment or a hardcoded one for demo
+            // WARNING: This is still a STUB. Do not use for real confidential data.
+            const key = QuickCrypto.createHash('sha256').update('stub-shared-secret').digest(); 
+            const iv = QuickCrypto.randomBytes(12);
+            
+            const cipher = QuickCrypto.createCipheriv('aes-256-gcm', key, iv);
+            let encrypted = cipher.update(plaintext, 'utf8', 'hex');
+            encrypted += cipher.final('hex');
+            const authTag = cipher.getAuthTag().toString('hex');
+
+            // Format: IV:AuthTag:Ciphertext
+            return `${iv.toString('hex')}:${authTag}:${encrypted}`;
+        } catch (e) {
+            console.error('Encryption failed:', e);
+            return `ERROR::${plaintext}`;
+        }
     },
 
     decryptMessage: (ciphertext: string, _senderId: string): string => {
-        // TODO: implement real Signal Protocol decryption
-        if (ciphertext.startsWith('ENCRYPTED::')) {
-            try {
-                const hex = ciphertext.replace('ENCRYPTED::', '');
-                const decoded = hex.match(/.{1,2}/g)?.map((byte) =>
-                    String.fromCharCode(parseInt(byte, 16))
-                ).join('') ?? '';
-                return decoded;
-            } catch {
-                return '[Tidak dapat mendekripsi pesan]';
-            }
+        try {
+            if (!ciphertext.includes(':')) return '[Format Pesan Tidak Valid]';
+
+            const parts = ciphertext.split(':');
+            if (parts.length !== 3) return '[Format Pesan Rusak]';
+
+            const [ivHex, authTagHex, encryptedHex] = parts;
+            
+            const key = QuickCrypto.createHash('sha256').update('stub-shared-secret').digest();
+            const iv = Buffer.from(ivHex, 'hex');
+            const authTag = Buffer.from(authTagHex, 'hex');
+
+            const decipher = QuickCrypto.createDecipheriv('aes-256-gcm', key, iv);
+            decipher.setAuthTag(authTag);
+            
+            let decrypted = decipher.update(encryptedHex, 'hex', 'utf8');
+            decrypted += decipher.final('utf8');
+            
+            return decrypted;
+        } catch (e) {
+            console.error('Decryption failed:', e);
+            return '[Gagal Mendekripsi Pesan]';
         }
-        return '[Tidak dapat mendekripsi pesan]';
     },
 }));

@@ -11,41 +11,46 @@ import { MessageBubble } from '../../components/molecules/MessageBubble/MessageB
 import { EncryptionBanner } from '../../components/molecules/EncryptionBanner/EncryptionBanner';
 import { RootStackParams } from '../../navigation/RootNavigator';
 
+import { withObservables } from '@nozbe/watermelondb/react';
+import { database } from '../../db';
+import { Message } from '../../db/models/Message';
+import { Q } from '@nozbe/watermelondb';
+
 type Nav = StackNavigationProp<RootStackParams>;
 type RouteT = RouteProp<RootStackParams, 'ChatRoom'>;
 
-// ─── Message type ─────────────────────────────────────────────────────────────
-interface Message {
-    id: string;
-    content: string;
-    isSent: boolean;
-    timestamp: string;
-    status: 'sent' | 'delivered' | 'read';
+// ─── Component Props ─────────────────────────────────────────────────────────────
+interface ChatRoomProps {
+    messages: Message[]; // Injected by withObservables
 }
 
-const MOCK_MESSAGES: Message[] = [
-    { id: 'm1', content: 'Heyy! 👋 Match kita! Seneng banget~', isSent: false, timestamp: '10:24', status: 'read' },
-    { id: 'm2', content: 'Hai! Iya haha, aku juga seneng 😊 Nama kamu Sari?', isSent: true, timestamp: '10:25', status: 'read' },
-    { id: 'm3', content: 'Yapp! Kamu Budi? Suka gaming juga ternyata~', isSent: false, timestamp: '10:26', status: 'read' },
-];
-
-export const ChatRoomScreen: React.FC = () => {
+export const ChatRoomScreenBase: React.FC<ChatRoomProps> = ({ messages }) => {
     const navigation = useNavigation<Nav>();
     const route = useRoute<RouteT>();
-    const { partnerName } = route.params;
-    const [messages, setMessages] = useState<Message[]>(MOCK_MESSAGES);
+    const { partnerName, conversationId } = route.params; // conversationId is remoteId
     const [inputText, setInputText] = useState('');
     const [isTyping] = useState(false);
 
-    const sendMessage = () => {
+    const sendMessage = async () => {
         if (!inputText.trim()) return;
-        setMessages((prev) => [
-            ...prev,
-            {
-                id: `m${Date.now()}`, content: inputText.trim(),
-                isSent: true, timestamp: 'Sekarang', status: 'sent',
-            },
-        ]);
+        
+        // Optimistic UI update handled by WatermelonDB observation
+        await database.write(async () => {
+            const conversations = await database.get('conversations').query(Q.where('remote_id', conversationId)).fetch();
+            const conversation = conversations[0];
+            
+            if (conversation) {
+                await database.get<Message>('messages').create(m => {
+                    m.conversation.set(conversation);
+                    m.content = inputText.trim();
+                    m.isSent = true; // Local flag
+                    m.senderId = 'me'; // Replace with real user ID
+                    m.status = 'sending';
+                    m.messageType = 'text';
+                });
+            }
+        });
+
         setInputText('');
         // TODO: encrypt with Signal Protocol + emit via Socket.io
     };
@@ -92,15 +97,15 @@ export const ChatRoomScreen: React.FC = () => {
                     renderItem={({ item }) => (
                         <MessageBubble
                             content={item.content}
-                            isSent={item.isSent}
-                            timestamp={item.timestamp}
-                            status={item.status}
+                            isSent={item.senderId === 'me'} // Logic check
+                            timestamp={item.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            status={item.status as any}
                             senderName={partnerName}
                             onLongPress={() => {/* Show context menu */ }}
                         />
                     )}
                     contentContainerStyle={styles.messageList}
-                    inverted={false}
+                    inverted={true} // WatermelonDB usually sorts desc, so invert list
                 />
 
                 {/* Typing indicator */}
@@ -152,6 +157,17 @@ export const ChatRoomScreen: React.FC = () => {
         </SafeAreaView>
     );
 };
+
+// ─── HOC for WatermelonDB ──────────────────────────────────────────────────────
+const enhance = withObservables(['route'], ({ route }) => ({
+    messages: database.get<Message>('messages')
+        .query(
+            Q.on('conversations', 'remote_id', route.params.conversationId),
+            Q.sortBy('created_at', Q.desc)
+        ),
+}));
+
+export const ChatRoomScreen = enhance(ChatRoomScreenBase);
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: Colors.background },

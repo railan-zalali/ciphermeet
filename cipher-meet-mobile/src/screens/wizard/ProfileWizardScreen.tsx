@@ -10,6 +10,8 @@ import { CButton } from '../../components/atoms/CButton/CButton';
 import { CChip } from '../../components/atoms/CChip/CChip';
 import { CSlider } from '../../components/atoms/CSlider/CSlider';
 import { AuthStackParams } from '../../navigation/RootNavigator';
+import { pickMedia } from '../../utils/media';
+import { Image } from 'react-native';
 
 type Nav = StackNavigationProp<AuthStackParams, 'ProfileWizard'>;
 
@@ -59,13 +61,25 @@ const StepPhotos: React.FC<{ state: WizardState; setState: React.Dispatch<React.
                         key={i}
                         style={[s.photoSlot, uri ? s.photoSlotFilled : s.photoSlotEmpty]}
                         onPress={() => {
-                            // Real: open image picker — for now show alert
                             Alert.alert('Upload Foto', `Pilih foto ke-${i + 1}`, [
                                 {
-                                    text: 'Gunakan placeholder', onPress: () => {
-                                        const updated = [...state.photos];
-                                        updated[i] = `https://picsum.photos/seed/${Date.now()}/400/500`;
-                                        setState((prev) => ({ ...prev, photos: updated }));
+                                    text: '📷 Kamera', onPress: async () => {
+                                        const result = await pickMedia('camera');
+                                        if (result) {
+                                            const updated = [...state.photos];
+                                            updated[i] = result.uri;
+                                            setState((prev) => ({ ...prev, photos: updated }));
+                                        }
+                                    },
+                                },
+                                {
+                                    text: '🖼️ Galeri', onPress: async () => {
+                                        const result = await pickMedia('gallery');
+                                        if (result) {
+                                            const updated = [...state.photos];
+                                            updated[i] = result.uri;
+                                            setState((prev) => ({ ...prev, photos: updated }));
+                                        }
                                     },
                                 },
                                 { text: 'Batal', style: 'cancel' },
@@ -75,11 +89,11 @@ const StepPhotos: React.FC<{ state: WizardState; setState: React.Dispatch<React.
                         accessibilityLabel={uri ? `Foto ${i + 1} sudah dipilih. Ketuk untuk ganti.` : `Tambah foto ${i + 1}. Wajib jika foto pertama.`}
                     >
                         {uri ? (
-                            <Text style={{ fontSize: 32 }}>🖼️</Text>
+                             <Image source={{ uri }} style={{ width: '100%', height: '100%', borderRadius: BorderRadius.md }} resizeMode="cover" />
                         ) : (
                             <Text style={s.photoSlotIcon}>{i === 0 ? '📷' : '+'}</Text>
                         )}
-                        {i === 0 && <Text style={s.photoMainLabel}>Utama</Text>}
+                        {i === 0 && !uri && <Text style={s.photoMainLabel}>Utama</Text>}
                     </TouchableOpacity>
                 );
             })}
